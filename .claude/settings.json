@@ -1,0 +1,9 @@
+{
+  "plugins": [
+    {
+      "name": "figma",
+      "source": "claude-plugins-official",
+      "version": "latest"
+    }
+  ]
+}
