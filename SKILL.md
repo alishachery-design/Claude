@@ -1,70 +1,82 @@
 # Frontend Slides Skill
 
-A Claude Code skill for creating beautiful, interactive HTML/CSS/JS slide presentations from scratch or by converting PowerPoint files.
+Base directory for this skill: /root/.claude/skills/frontend-slides
 
-## Overview
+You are now in **frontend-slides mode**. Your job is to create a beautiful, self-contained HTML slide presentation.
 
-This skill helps you build presentation slides as web pages with:
-- Responsive, viewport-based layouts
-- Smooth animations and transitions
-- Style presets for consistent theming
-- PowerPoint (.pptx) extraction support
+---
 
-## Usage
+## What to do
 
-### Creating a new presentation
+1. **Understand the request** — determine topic, number of slides, and preferred style preset (default: `dark-minimal`).
+2. **Read the reference files** from the skill base directory:
+   - `STYLE_PRESETS.md` — choose or apply a CSS theme
+   - `html-template.md` — use the canonical HTML boilerplate
+   - `animation-patterns.md` — pick appropriate entry animations
+   - `viewport-base.css` — inline or link for base styles
+3. **Generate** a single self-contained `index.html` file (or the filename requested).
+4. **Write** the file to the current working directory.
 
-Ask Claude to create a slide deck:
-```
-Create a 10-slide presentation about [topic] using the frontend-slides skill
-```
+---
 
-### Converting a PowerPoint
+## Rules
 
-Provide a .pptx file and ask Claude to convert it:
-```
-Convert my presentation.pptx to an HTML slide deck
-```
+- Every size value uses viewport units (`vw`, `vh`, `vmin`) — never `px` for layout.
+- CSS custom properties (`var(--...)`) control all colors, fonts, and spacing.
+- Navigation is always included: arrow keys, spacebar, click/tap, swipe.
+- Slide counter and progress bar are always present.
+- Speaker notes go in `<aside class="notes">` (hidden by default).
+- `prefers-reduced-motion` is always respected.
+- No external JS dependencies. Fonts from Google Fonts are allowed.
+- One key idea per slide. Bullet lists max 5 items.
 
-### Applying a style preset
+---
 
-Reference a preset from STYLE_PRESETS.md:
-```
-Create slides using the "dark-minimal" preset
-```
+## Slide count guidance
 
-## File Structure
+| Request | Slides |
+|---------|--------|
+| "short" / "quick" | 5–7 |
+| default / unspecified | 8–12 |
+| "detailed" / "full" | 12–20 |
 
-```
-slides/
-├── index.html          # Main presentation file
-├── style.css           # Custom styles (extends viewport-base.css)
-├── animations.css      # Animation classes
-└── slides/
-    ├── slide-01.html   # Individual slide partials (optional)
-    └── ...
-```
+---
 
-## Key Principles
+## Workflow
 
-1. **Viewport units first** — use `vw`, `vh`, `vmin`, `vmax` for sizing
-2. **CSS custom properties** — use variables for theming
-3. **Progressive enhancement** — works without JS, enhanced with it
-4. **Keyboard navigation** — arrow keys, spacebar always work
-5. **Print-friendly** — each slide prints as one page
+### New presentation from scratch
 
-## Navigation Controls
+1. Read `html-template.md` and `STYLE_PRESETS.md`.
+2. Pick the style preset that fits the topic (or use what the user specified).
+3. Outline the slides: title → agenda → content slides → closing.
+4. Write the complete `index.html`.
 
-Generated slides always include:
-- Arrow key navigation (← →)
-- Spacebar to advance
-- Click/tap to advance
-- Slide counter display
-- Optional presenter notes (press `N`)
+### Convert a PowerPoint
 
-## Dependencies
+1. Run `python /root/.claude/skills/frontend-slides/scripts/extract-pptx.py <file.pptx>` to get a base HTML file.
+2. Read the output HTML.
+3. Improve layout, apply a style preset, and add animations.
+4. Write the improved file back.
 
-No external dependencies required. All styles and scripts are self-contained.
+### Restyle existing slides
 
-Optional:
-- `scripts/extract-pptx.py` — requires `python-pptx` (`pip install python-pptx`)
+1. Read the existing HTML file.
+2. Apply the requested preset variables from `STYLE_PRESETS.md`.
+3. Write the updated file.
+
+---
+
+## Output checklist
+
+Before writing the file, confirm:
+- [ ] Style preset variables are defined in `:root`
+- [ ] All slides have `id="slide-N"` attributes
+- [ ] First slide has `class="slide active"`
+- [ ] Navigation JS is included and functional
+- [ ] Slide counter and progress bar are present
+- [ ] `<aside class="notes">` on every slide
+- [ ] No hardcoded `px` sizes for layout elements
+
+---
+
+Now read the necessary reference files and proceed with the user's request.
